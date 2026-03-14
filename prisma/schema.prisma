@@ -1,0 +1,131 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model ArtworkCategory {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  description String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  artworks    Artwork[]
+
+  @@map("artwork_category")
+}
+
+model Artwork {
+  id             Int             @id @default(autoincrement())
+  title          String
+  slug           String          @unique
+  description    String?
+  categoryId     Int             @map("category_id")
+  widthInches    Float           @map("width_inches")
+  heightInches   Float           @map("height_inches")
+  originalPrice  Decimal         @map("original_price") @db.Decimal(10, 2)
+  originalSold   Boolean         @default(false) @map("original_sold")
+  imageUrl       String          @map("image_url")
+  thumbnailUrl   String?         @map("thumbnail_url")
+  featured       Boolean         @default(false)
+  sortOrder      Int             @default(0) @map("sort_order")
+  active         Boolean         @default(true)
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  category       ArtworkCategory @relation(fields: [categoryId], references: [id])
+  printOptions   PrintOption[]
+  cartItems      CartItem[]
+  orderItems     OrderItem[]
+
+  @@index([slug])
+  @@map("artwork")
+}
+
+model PrintOption {
+  id           Int         @id @default(autoincrement())
+  artworkId    Int         @map("artwork_id")
+  sizeName     String      @map("size_name")
+  widthInches  Float       @map("width_inches")
+  heightInches Float       @map("height_inches")
+  price        Decimal     @db.Decimal(10, 2)
+  inStock      Boolean     @default(true) @map("in_stock")
+  active       Boolean     @default(true)
+  artwork      Artwork     @relation(fields: [artworkId], references: [id])
+  cartItems    CartItem[]
+  orderItems   OrderItem[]
+
+  @@map("print_option")
+}
+
+model CartItem {
+  id            Int          @id @default(autoincrement())
+  sessionId     String       @map("session_id")
+  artworkId     Int          @map("artwork_id")
+  printOptionId Int?         @map("print_option_id")
+  quantity      Int          @default(1)
+  isOriginal    Boolean      @default(false) @map("is_original")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  artwork       Artwork      @relation(fields: [artworkId], references: [id])
+  printOption   PrintOption? @relation(fields: [printOptionId], references: [id])
+
+  @@index([sessionId])
+  @@map("cart_item")
+}
+
+model Order {
+  id              Int         @id @default(autoincrement())
+  email           String
+  customerName    String      @map("customer_name")
+  shippingAddress String      @map("shipping_address")
+  status          String      @default("pending")
+  total           Decimal     @db.Decimal(10, 2)
+  createdAt       DateTime    @default(now()) @map("created_at")
+  orderItems      OrderItem[]
+
+  @@map("order")
+}
+
+model OrderItem {
+  id            Int          @id @default(autoincrement())
+  orderId       Int          @map("order_id")
+  artworkId     Int          @map("artwork_id")
+  printOptionId Int?         @map("print_option_id")
+  isOriginal    Boolean      @map("is_original")
+  price         Decimal      @db.Decimal(10, 2)
+  quantity      Int
+  order         Order        @relation(fields: [orderId], references: [id])
+  artwork       Artwork      @relation(fields: [artworkId], references: [id])
+  printOption   PrintOption? @relation(fields: [printOptionId], references: [id])
+
+  @@map("order_item")
+}
+
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String
+  role         String   @default("admin")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("admin_user")
+}
+
+model SiteMetric {
+  id        Int      @id @default(autoincrement())
+  page      String
+  event     String
+  count     Int      @default(1)
+  date      DateTime
+
+  @@index([date])
+  @@map("site_metric")
+}

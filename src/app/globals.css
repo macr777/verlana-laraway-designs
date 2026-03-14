@@ -1,0 +1,135 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+@theme inline {
+  --font-serif: var(--font-playfair);
+}
+
+:root {
+  /* Montana artist palette — warm, earthy, natural */
+  --background: oklch(0.975 0.008 85);        /* warm cream #FAF7F2 */
+  --foreground: oklch(0.22 0.01 50);           /* deep charcoal #2D2926 */
+  --card: oklch(0.985 0.006 85);               /* slightly warmer white */
+  --card-foreground: oklch(0.22 0.01 50);      /* charcoal */
+  --popover: oklch(0.985 0.006 85);            /* warm white */
+  --popover-foreground: oklch(0.22 0.01 50);   /* charcoal */
+  --primary: oklch(0.57 0.055 140);            /* sage green #7C8C6E */
+  --primary-foreground: oklch(0.975 0.008 85); /* warm cream */
+  --secondary: oklch(0.9 0.022 80);            /* warm tan/sand #E8DFD0 */
+  --secondary-foreground: oklch(0.22 0.01 50); /* charcoal */
+  --muted: oklch(0.92 0.018 130);              /* light sage/grey */
+  --muted-foreground: oklch(0.52 0.03 120);    /* muted sage text */
+  --accent: oklch(0.48 0.1 45);               /* burnt sienna #A0522D */
+  --accent-foreground: oklch(0.975 0.008 85);  /* warm cream */
+  --destructive: oklch(0.55 0.18 28);          /* muted red */
+  --border: oklch(0.88 0.012 80);              /* warm light grey */
+  --input: oklch(0.88 0.012 80);               /* warm light grey */
+  --ring: oklch(0.57 0.055 140);              /* sage green */
+  --chart-1: oklch(0.57 0.055 140);            /* sage green */
+  --chart-2: oklch(0.48 0.1 45);              /* burnt sienna */
+  --chart-3: oklch(0.9 0.022 80);             /* sand */
+  --chart-4: oklch(0.65 0.07 120);            /* lighter sage */
+  --chart-5: oklch(0.38 0.08 40);             /* dark sienna */
+  --radius: 0.625rem;
+  --sidebar: oklch(0.96 0.01 85);              /* warm off-white */
+  --sidebar-foreground: oklch(0.22 0.01 50);   /* charcoal */
+  --sidebar-primary: oklch(0.57 0.055 140);    /* sage green */
+  --sidebar-primary-foreground: oklch(0.975 0.008 85); /* warm cream */
+  --sidebar-accent: oklch(0.9 0.022 80);       /* sand */
+  --sidebar-accent-foreground: oklch(0.22 0.01 50); /* charcoal */
+  --sidebar-border: oklch(0.88 0.012 80);      /* warm light grey */
+  --sidebar-ring: oklch(0.57 0.055 140);       /* sage green */
+}
+
+.dark {
+  /* Montana dark mode — deep charcoal base, muted earthen tones */
+  --background: oklch(0.18 0.01 50);           /* very dark charcoal */
+  --foreground: oklch(0.93 0.008 85);           /* warm off-white */
+  --card: oklch(0.22 0.012 50);                /* slightly lighter charcoal */
+  --card-foreground: oklch(0.93 0.008 85);      /* warm off-white */
+  --popover: oklch(0.22 0.012 50);             /* slightly lighter charcoal */
+  --popover-foreground: oklch(0.93 0.008 85);   /* warm off-white */
+  --primary: oklch(0.62 0.05 140);             /* muted sage green */
+  --primary-foreground: oklch(0.18 0.01 50);   /* dark charcoal */
+  --secondary: oklch(0.28 0.015 60);           /* dark warm brown */
+  --secondary-foreground: oklch(0.93 0.008 85); /* warm off-white */
+  --muted: oklch(0.28 0.015 60);               /* dark warm brown */
+  --muted-foreground: oklch(0.65 0.025 100);   /* muted sage/tan */
+  --accent: oklch(0.55 0.09 45);              /* softer burnt sienna */
+  --accent-foreground: oklch(0.93 0.008 85);   /* warm off-white */
+  --destructive: oklch(0.65 0.16 25);          /* muted red */
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.62 0.05 140);               /* muted sage green */
+  --chart-1: oklch(0.62 0.05 140);             /* sage green */
+  --chart-2: oklch(0.55 0.09 45);             /* sienna */
+  --chart-3: oklch(0.75 0.025 80);            /* light sand */
+  --chart-4: oklch(0.68 0.06 125);            /* lighter sage */
+  --chart-5: oklch(0.45 0.07 40);             /* dark sienna */
+  --sidebar: oklch(0.22 0.012 50);             /* card-level charcoal */
+  --sidebar-foreground: oklch(0.93 0.008 85);  /* warm off-white */
+  --sidebar-primary: oklch(0.62 0.05 140);     /* muted sage */
+  --sidebar-primary-foreground: oklch(0.18 0.01 50); /* dark charcoal */
+  --sidebar-accent: oklch(0.28 0.015 60);      /* dark warm brown */
+  --sidebar-accent-foreground: oklch(0.93 0.008 85); /* warm off-white */
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.62 0.05 140);        /* muted sage */
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
