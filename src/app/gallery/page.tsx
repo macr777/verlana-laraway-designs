@@ -42,6 +42,7 @@ export default async function GalleryPage() {
                   src={artwork.imageUrl}
                   alt={artwork.title}
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  aspectRatio={`${artwork.widthInches}/${artwork.heightInches}`}
                 />
 
                 {/* Sold badge overlay */}

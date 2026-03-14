@@ -110,6 +110,7 @@ export default async function HomePage() {
                     src={work.imageUrl}
                     alt={work.title}
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    aspectRatio={`${work.widthInches}/${work.heightInches}`}
                   />
 
                   {/* Info */}

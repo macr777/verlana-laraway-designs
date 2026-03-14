@@ -54,6 +54,7 @@ export default async function ArtworkPage({
             src={artwork.imageUrl}
             alt={artwork.title}
             sizes="(max-width: 1024px) 100vw, 50vw"
+            aspectRatio={`${artwork.widthInches}/${artwork.heightInches}`}
             priority
           />
         </div>
