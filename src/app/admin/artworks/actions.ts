@@ -92,3 +92,41 @@ export async function deleteArtwork(id: number) {
   revalidatePath("/");
   redirect("/admin/artworks");
 }
+
+export async function addPrintOption(artworkId: number, formData: FormData) {
+  const sizeName = formData.get("sizeName") as string;
+  const widthInches = Number(formData.get("printWidth"));
+  const heightInches = Number(formData.get("printHeight"));
+  const price = Number(formData.get("printPrice"));
+
+  await prisma.printOption.create({
+    data: { artworkId, sizeName, widthInches, heightInches, price },
+  });
+
+  revalidatePath(`/admin/artworks/${artworkId}/edit`);
+  revalidatePath("/gallery");
+}
+
+export async function updatePrintOption(printId: number, artworkId: number, formData: FormData) {
+  const sizeName = formData.get("sizeName") as string;
+  const widthInches = Number(formData.get("printWidth"));
+  const heightInches = Number(formData.get("printHeight"));
+  const price = Number(formData.get("printPrice"));
+  const inStock = formData.get("inStock") === "on";
+  const active = formData.get("active") === "on";
+
+  await prisma.printOption.update({
+    where: { id: printId },
+    data: { sizeName, widthInches, heightInches, price, inStock, active },
+  });
+
+  revalidatePath(`/admin/artworks/${artworkId}/edit`);
+  revalidatePath("/gallery");
+}
+
+export async function deletePrintOption(printId: number, artworkId: number) {
+  await prisma.printOption.delete({ where: { id: printId } });
+
+  revalidatePath(`/admin/artworks/${artworkId}/edit`);
+  revalidatePath("/gallery");
+}

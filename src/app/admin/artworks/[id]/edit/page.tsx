@@ -16,7 +16,10 @@ export default async function EditArtworkPage({
   if (Number.isNaN(artworkId)) notFound();
 
   const [artwork, categories] = await Promise.all([
-    prisma.artwork.findUnique({ where: { id: artworkId } }),
+    prisma.artwork.findUnique({
+      where: { id: artworkId },
+      include: { printOptions: { orderBy: { price: "asc" } } },
+    }),
     prisma.artworkCategory.findMany({ orderBy: { name: "asc" } }),
   ]);
 
@@ -36,6 +39,10 @@ export default async function EditArtworkPage({
           artwork={{
             ...artwork,
             originalPrice: Number(artwork.originalPrice),
+            printOptions: artwork.printOptions.map((p) => ({
+              ...p,
+              price: Number(p.price),
+            })),
           }}
           categories={categories}
         />
