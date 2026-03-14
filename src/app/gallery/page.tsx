@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { FramedPainting } from "@/components/FramedPainting";
-import { getActiveArtworks } from "@/lib/artworks";
+import { getActiveArtworks } from "@/lib/queries";
 
 export const metadata: Metadata = {
   title: "Gallery",
@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     "Browse Verlana Laraway's collection of original watercolor paintings and fine art prints — Montana landscapes, wildlife, portraits, and more.",
 };
 
-export default function GalleryPage() {
-  const artworks = getActiveArtworks();
+export default async function GalleryPage() {
+  const artworks = await getActiveArtworks();
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -60,7 +60,7 @@ export default function GalleryPage() {
                   {artwork.title}
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                  {artwork.width}&quot; &times; {artwork.height}&quot;
+                  {artwork.widthInches}&quot; &times; {artwork.heightInches}&quot;
                 </p>
                 <p className="mt-1 text-sm font-medium text-foreground">
                   ${artwork.originalPrice.toLocaleString()}.00

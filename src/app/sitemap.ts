@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
-import { getActiveArtworks } from "@/lib/artworks";
+import { getActiveArtworks } from "@/lib/queries";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://verlana-laraway-designs.vercel.app";
 
   const staticPages = [
@@ -37,7 +37,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const artworkPages = getActiveArtworks().map((a) => ({
+  const allArtworks = await getActiveArtworks();
+  const artworkPages = allArtworks.map((a) => ({
     url: `${baseUrl}/gallery/${a.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,

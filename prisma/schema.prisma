@@ -129,3 +129,25 @@ model SiteMetric {
   @@index([date])
   @@map("site_metric")
 }
+
+model CommissionRequest {
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String
+  subject     String
+  size        String?
+  description String
+  status      String   @default("new")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("commission_request")
+}
+
+model SiteSetting {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String
+
+  @@map("site_setting")
+}

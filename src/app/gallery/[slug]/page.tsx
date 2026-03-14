@@ -4,11 +4,12 @@ import { ArrowLeft, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FramedPainting } from "@/components/FramedPainting";
-import { getArtworkBySlug, getActiveArtworks } from "@/lib/artworks";
+import { getArtworkBySlug, getActiveArtworks } from "@/lib/queries";
 import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
-  return getActiveArtworks().map((a) => ({ slug: a.slug }));
+  const artworks = await getActiveArtworks();
+  return artworks.map((a) => ({ slug: a.slug }));
 }
 
 export async function generateMetadata({
@@ -17,11 +18,11 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const artwork = getArtworkBySlug(slug);
+  const artwork = await getArtworkBySlug(slug);
   if (!artwork) return { title: "Not Found" };
   return {
     title: artwork.title,
-    description: `${artwork.title} — an original watercolor painting by Verlana Laraway. ${artwork.width}" × ${artwork.height}". ${artwork.originalSold ? "Original sold; prints available." : "Original available."}`,
+    description: `${artwork.title} — an original watercolor painting by Verlana Laraway. ${artwork.widthInches}" × ${artwork.heightInches}". ${artwork.originalSold ? "Original sold; prints available." : "Original available."}`,
   };
 }
 
@@ -31,7 +32,7 @@ export default async function ArtworkPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const artwork = getArtworkBySlug(slug);
+  const artwork = await getArtworkBySlug(slug);
   if (!artwork) notFound();
 
   return (
@@ -65,8 +66,8 @@ export default async function ArtworkPage({
               {artwork.title}
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Watercolor on paper &mdash; {artwork.width}&quot; &times;{" "}
-              {artwork.height}&quot;
+              Watercolor on paper &mdash; {artwork.widthInches}&quot; &times;{" "}
+              {artwork.heightInches}&quot;
             </p>
           </div>
 

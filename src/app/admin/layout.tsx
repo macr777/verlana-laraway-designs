@@ -6,7 +6,11 @@ import {
   ShoppingBag,
   Settings,
   ArrowLeft,
+  MessageCircle,
+  LogOut,
 } from "lucide-react";
+import { auth } from "@/lib/auth";
+import { SignOutButton } from "./SignOutButton";
 
 export const metadata: Metadata = {
   title: {
@@ -18,15 +22,23 @@ export const metadata: Metadata = {
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/artworks", label: "Artworks", icon: Image },
+  { href: "/admin/commissions", label: "Commissions", icon: MessageCircle },
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+
+  // If no session (login page), just render children without sidebar
+  if (!session) {
+    return <>{children}</>;
+  }
+
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
@@ -69,9 +81,12 @@ export default function AdminLayout({
           </ul>
         </nav>
 
-        {/* Footer */}
-        <div className="border-t border-stone-700 px-5 py-4">
-          <p className="text-xs text-stone-500">Verlana Laraway Designs</p>
+        {/* Footer with user info & sign out */}
+        <div className="border-t border-stone-700 px-4 py-4">
+          <p className="mb-2 truncate text-sm text-stone-300">
+            {session.user?.name || session.user?.email}
+          </p>
+          <SignOutButton />
         </div>
       </aside>
 

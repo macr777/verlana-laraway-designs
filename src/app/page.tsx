@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Palette, Printer, Package } from "lucide-react";
 import { FramedPainting } from "@/components/FramedPainting";
-import { getFeaturedArtworks } from "@/lib/artworks";
+import { getFeaturedArtworks } from "@/lib/queries";
 
 const whyBuy = [
   {
@@ -24,8 +24,8 @@ const whyBuy = [
   },
 ];
 
-export default function HomePage() {
-  const featured = getFeaturedArtworks();
+export default async function HomePage() {
+  const featured = await getFeaturedArtworks();
 
   return (
     <>
@@ -118,8 +118,8 @@ export default function HomePage() {
                       {work.title}
                     </h3>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      Watercolor on archival paper &mdash; {work.width}&quot;
-                      &times; {work.height}&quot;
+                      Watercolor on archival paper &mdash; {work.widthInches}&quot;
+                      &times; {work.heightInches}&quot;
                     </p>
                     <p className="mt-3 text-base font-semibold text-foreground">
                       ${work.originalPrice.toLocaleString()}.00

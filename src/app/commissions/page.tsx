@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Paintbrush, Clock, MessageCircle, Palette } from "lucide-react";
+import { CommissionForm } from "@/components/CommissionForm";
 
 export const metadata: Metadata = {
   title: "Commission a Painting",
@@ -169,121 +170,7 @@ export default function CommissionsPage() {
           </p>
         </div>
 
-        <form className="space-y-6">
-          {/* Name & Email */}
-          <div className="grid gap-6 sm:grid-cols-2">
-            <div>
-              <label
-                htmlFor="name"
-                className="mb-1.5 block text-sm font-medium text-foreground"
-              >
-                Your Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                placeholder="Jane Smith"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="email"
-                className="mb-1.5 block text-sm font-medium text-foreground"
-              >
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                placeholder="jane@example.com"
-              />
-            </div>
-          </div>
-
-          {/* Subject */}
-          <div>
-            <label
-              htmlFor="subject"
-              className="mb-1.5 block text-sm font-medium text-foreground"
-            >
-              What would you like painted?
-            </label>
-            <select
-              id="subject"
-              name="subject"
-              className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-            >
-              <option value="">Select a category...</option>
-              <option value="landscape">Landscape / Scenic View</option>
-              <option value="pet">Pet Portrait</option>
-              <option value="home">Home / Building</option>
-              <option value="floral">Floral / Still Life</option>
-              <option value="portrait">Portrait</option>
-              <option value="gift">Custom Gift</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-
-          {/* Preferred size */}
-          <div>
-            <label
-              htmlFor="size"
-              className="mb-1.5 block text-sm font-medium text-foreground"
-            >
-              Preferred Size (optional)
-            </label>
-            <select
-              id="size"
-              name="size"
-              className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-            >
-              <option value="">Not sure yet</option>
-              <option value="small">Small (up to 8&quot; &times; 10&quot;)</option>
-              <option value="medium">Medium (11&quot; &times; 14&quot; to 12&quot; &times; 16&quot;)</option>
-              <option value="large">Large (16&quot; &times; 20&quot; or bigger)</option>
-            </select>
-          </div>
-
-          {/* Description */}
-          <div>
-            <label
-              htmlFor="description"
-              className="mb-1.5 block text-sm font-medium text-foreground"
-            >
-              Tell Verlana about your vision
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              rows={5}
-              required
-              className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-y"
-              placeholder="Describe what you'd like — a specific place, a pet, colors you love, the feeling you want the painting to capture. The more detail, the better!"
-            />
-          </div>
-
-          {/* Reference photos note */}
-          <p className="text-xs text-muted-foreground">
-            Have reference photos? You can reply to Verlana&apos;s response
-            email with any images that will help bring your idea to life.
-          </p>
-
-          {/* Submit */}
-          <div className="pt-2">
-            <button
-              type="submit"
-              className="w-full rounded-full bg-primary px-8 py-3 text-base font-medium text-primary-foreground shadow-sm transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 sm:w-auto"
-            >
-              Send Commission Request
-            </button>
-          </div>
-        </form>
+        <CommissionForm />
       </section>
 
       {/* Pricing note */}
