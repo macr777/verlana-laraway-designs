@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -35,17 +36,17 @@ export default function AboutPage() {
       {/* Bio section */}
       <section className="mx-auto max-w-6xl px-6 py-20 sm:py-24">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-16 lg:gap-20">
-          {/* Artist photo placeholder */}
+          {/* Artist photo */}
           <div className="flex flex-col items-center md:items-start">
-            <div className="aspect-square w-full max-w-sm overflow-hidden rounded-2xl bg-stone-200 shadow-md">
-              <div className="flex h-full w-full items-center justify-center">
-                <div className="text-center">
-                  <div className="mx-auto mb-3 h-16 w-16 rounded-full bg-stone-300/70" />
-                  <p className="font-sans text-sm font-light tracking-wide text-stone-500">
-                    Artist Photo
-                  </p>
-                </div>
-              </div>
+            <div className="relative aspect-square w-full max-w-sm overflow-hidden rounded-2xl shadow-md">
+              <Image
+                src="/verlana-portrait.jpg"
+                alt="Verlana Laraway — watercolor artist from Whitefish, Montana"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 384px"
+                priority
+              />
             </div>
             <p className="mt-4 font-sans text-xs tracking-widest text-muted-foreground uppercase text-center md:text-left w-full max-w-sm">
               Verlana Laraway — Whitefish, Montana

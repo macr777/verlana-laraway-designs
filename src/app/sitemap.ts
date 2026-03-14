@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
+import { getActiveArtworks } from "@/lib/artworks";
 
-// For now use static pages. When DB is connected, add artwork slugs dynamically.
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://verlana-laraway-designs.vercel.app";
 
@@ -18,6 +18,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/commissions`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/about`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
@@ -31,15 +37,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // TODO: Add dynamic artwork pages from DB
-  // const artworks = await prisma.artwork.findMany({ where: { active: true }, select: { slug: true, updatedAt: true } });
-  // const artworkPages = artworks.map(a => ({
-  //   url: `${baseUrl}/gallery/${a.slug}`,
-  //   lastModified: a.updatedAt,
-  //   changeFrequency: "monthly" as const,
-  //   priority: 0.8,
-  // }));
-  // return [...staticPages, ...artworkPages];
+  const artworkPages = getActiveArtworks().map((a) => ({
+    url: `${baseUrl}/gallery/${a.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
 
-  return staticPages;
+  return [...staticPages, ...artworkPages];
 }

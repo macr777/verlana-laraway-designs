@@ -13,6 +13,7 @@ import {
 
 const navLinks = [
   { label: "Gallery", href: "/gallery" },
+  { label: "Commissions", href: "/commissions" },
   { label: "About", href: "/about" },
 ];
 

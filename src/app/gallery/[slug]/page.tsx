@@ -1,85 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, ShoppingCart, Palette } from "lucide-react";
+import { ArrowLeft, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { FramedPainting } from "@/components/FramedPainting";
+import { getArtworkBySlug, getActiveArtworks } from "@/lib/artworks";
+import { notFound } from "next/navigation";
 
-// ---------------------------------------------------------------------------
-// Placeholder data — replace with DB lookups once Prisma is connected
-// ---------------------------------------------------------------------------
-
-interface PrintOption {
-  size: string;
-  price: number;
+export async function generateStaticParams() {
+  return getActiveArtworks().map((a) => ({ slug: a.slug }));
 }
-
-interface ArtworkDetail {
-  title: string;
-  slug: string;
-  dimensions: string;
-  price: number;
-  originalSold: boolean;
-  description: string;
-  prints: PrintOption[];
-}
-
-const placeholderArtworks: Record<string, ArtworkDetail> = {
-  "glacier-morning-light": {
-    title: "Glacier Morning Light",
-    slug: "glacier-morning-light",
-    dimensions: "12 × 16",
-    price: 485,
-    originalSold: false,
-    description:
-      "Soft alpenglow washes across the peaks of Glacier National Park in the quiet moments just after sunrise. Painted en plein air during a July morning, this piece captures the fleeting pink and amber tones that briefly illuminate the high country before giving way to the clear blue of a Montana summer day.",
-    prints: [
-      { size: "5 × 7", price: 35 },
-      { size: "8 × 10", price: 65 },
-      { size: "11 × 14", price: 110 },
-      { size: "16 × 20", price: 175 },
-    ],
-  },
-  "whitefish-lake-at-dusk": {
-    title: "Whitefish Lake at Dusk",
-    slug: "whitefish-lake-at-dusk",
-    dimensions: "9 × 12",
-    price: 320,
-    originalSold: true,
-    description:
-      "The still surface of Whitefish Lake mirrors a gradient of violet and deep rose as the last light of day fades behind the Cabinet Mountains. A favorite evening view from the east shore, captured in a single watercolor session with wet-on-wet technique.",
-    prints: [
-      { size: "5 × 7", price: 30 },
-      { size: "8 × 10", price: 55 },
-      { size: "11 × 14", price: 95 },
-    ],
-  },
-};
-
-// Fallback detail for slugs not in the placeholder map
-function buildFallback(slug: string): ArtworkDetail {
-  const title = slug
-    .split("-")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
-  return {
-    title,
-    slug,
-    dimensions: "12 × 16",
-    price: 425,
-    originalSold: false,
-    description:
-      "An original watercolor painting by Verlana Laraway, inspired by the landscapes and natural beauty of northwestern Montana. Each painting is created with archival-quality pigments on 140 lb cold-press paper.",
-    prints: [
-      { size: "5 × 7", price: 35 },
-      { size: "8 × 10", price: 65 },
-      { size: "11 × 14", price: 110 },
-    ],
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Metadata
-// ---------------------------------------------------------------------------
 
 export async function generateMetadata({
   params,
@@ -87,16 +17,13 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const artwork = placeholderArtworks[slug] ?? buildFallback(slug);
+  const artwork = getArtworkBySlug(slug);
+  if (!artwork) return { title: "Not Found" };
   return {
     title: artwork.title,
-    description: `${artwork.title} — an original watercolor painting by Verlana Laraway. ${artwork.dimensions} inches. ${artwork.originalSold ? "Original sold; prints available." : "Original available."}`,
+    description: `${artwork.title} — an original watercolor painting by Verlana Laraway. ${artwork.width}" × ${artwork.height}". ${artwork.originalSold ? "Original sold; prints available." : "Original available."}`,
   };
 }
-
-// ---------------------------------------------------------------------------
-// Page component
-// ---------------------------------------------------------------------------
 
 export default async function ArtworkPage({
   params,
@@ -104,7 +31,8 @@ export default async function ArtworkPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const artwork = placeholderArtworks[slug] ?? buildFallback(slug);
+  const artwork = getArtworkBySlug(slug);
+  if (!artwork) notFound();
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
@@ -119,29 +47,17 @@ export default async function ArtworkPage({
 
       {/* Main content */}
       <div className="mt-2 flex flex-col gap-10 lg:flex-row lg:gap-14 lg:items-start">
-        {/* ----------------------------------------------------------------- */}
-        {/* Left — Image                                                       */}
-        {/* ----------------------------------------------------------------- */}
+        {/* Left — Framed Image */}
         <div className="w-full lg:w-1/2 lg:sticky lg:top-24">
-          <div
-            className="relative w-full overflow-hidden rounded-xl bg-stone-200 dark:bg-stone-700"
-            style={{ aspectRatio: "3/4" }}
-          >
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-              <Palette
-                className="size-16 text-stone-400 dark:text-stone-500"
-                strokeWidth={1.25}
-              />
-              <span className="text-sm text-stone-400 dark:text-stone-500 select-none">
-                {artwork.dimensions} inches
-              </span>
-            </div>
-          </div>
+          <FramedPainting
+            src={artwork.imageUrl}
+            alt={artwork.title}
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            priority
+          />
         </div>
 
-        {/* ----------------------------------------------------------------- */}
-        {/* Right — Details                                                    */}
-        {/* ----------------------------------------------------------------- */}
+        {/* Right — Details */}
         <div className="w-full lg:w-1/2 flex flex-col gap-8">
           {/* Title */}
           <div>
@@ -149,7 +65,8 @@ export default async function ArtworkPage({
               {artwork.title}
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Watercolor on paper &mdash; {artwork.dimensions} inches
+              Watercolor on paper &mdash; {artwork.width}&quot; &times;{" "}
+              {artwork.height}&quot;
             </p>
           </div>
 
@@ -174,7 +91,7 @@ export default async function ArtworkPage({
             ) : (
               <div className="flex items-center gap-4">
                 <span className="text-2xl font-semibold text-foreground">
-                  ${artwork.price.toFixed(2)}
+                  ${artwork.originalPrice.toLocaleString()}.00
                 </span>
                 <Button size="lg" className="gap-2">
                   <ShoppingCart className="size-4" />
@@ -194,14 +111,14 @@ export default async function ArtworkPage({
             </h2>
 
             <ul className="flex flex-col gap-3">
-              {artwork.prints.map((print) => (
+              {artwork.printOptions.map((print) => (
                 <li
-                  key={print.size}
+                  key={print.sizeName}
                   className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3"
                 >
                   <div>
                     <span className="text-sm font-medium text-foreground">
-                      {print.size} inches
+                      {print.sizeName}
                     </span>
                     <span className="ml-3 text-sm text-muted-foreground">
                       ${print.price.toFixed(2)}

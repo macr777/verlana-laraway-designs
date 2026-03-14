@@ -1,31 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Palette, Printer, Package } from "lucide-react";
-
-const featuredWorks = [
-  {
-    id: 1,
-    title: "Glacier Morning Light",
-    dimensions: '11" × 14"',
-    price: "$380",
-  },
-  {
-    id: 2,
-    title: "Whitefish Lake at Dusk",
-    dimensions: '9" × 12"',
-    price: "$295",
-  },
-  {
-    id: 3,
-    title: "Mountain Lupine Field",
-    dimensions: '12" × 16"',
-    price: "$420",
-  },
-];
+import { FramedPainting } from "@/components/FramedPainting";
+import { getFeaturedArtworks } from "@/lib/artworks";
 
 const whyBuy = [
   {
@@ -46,9 +25,11 @@ const whyBuy = [
 ];
 
 export default function HomePage() {
+  const featured = getFeaturedArtworks();
+
   return (
     <>
-      {/* ── Hero ─────────────────────────────────────────────────── */}
+      {/* Hero */}
       <section className="relative bg-background">
         <div className="mx-auto max-w-7xl px-6 py-20 lg:py-28 lg:px-12">
           <div className="grid items-center gap-12 lg:grid-cols-2">
@@ -82,22 +63,15 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Hero image placeholder */}
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-secondary/60 ring-1 ring-foreground/8 lg:aspect-[3/4]">
-              <div className="flex h-full w-full items-center justify-center">
-                <div className="text-center">
-                  <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-background/70">
-                    <Palette className="size-7 text-muted-foreground" />
-                  </div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    Hero image
-                  </p>
-                  <p className="mt-1 text-xs text-muted-foreground/60">
-                    Featured painting — coming soon
-                  </p>
-                </div>
-              </div>
-            </div>
+            {/* Hero image — framed featured painting */}
+            <FramedPainting
+              src="/paintings/mountain-sentinel.jpg"
+              alt="Mountain Sentinel — watercolor painting by Verlana Laraway"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              aspectRatio="3/4"
+              priority
+              showDisclaimer={false}
+            />
           </div>
         </div>
 
@@ -105,7 +79,7 @@ export default function HomePage() {
         <div className="absolute bottom-0 left-0 right-0 h-px bg-border" />
       </section>
 
-      {/* ── Featured Works ───────────────────────────────────────── */}
+      {/* Featured Works */}
       <section className="bg-background py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           {/* Section header */}
@@ -128,38 +102,31 @@ export default function HomePage() {
 
           {/* Artwork grid */}
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {featuredWorks.map((work) => (
-              <Card
-                key={work.id}
-                className="cursor-pointer border-0 bg-transparent ring-0 transition-transform duration-200 hover:-translate-y-1"
-              >
-                {/* Image placeholder */}
-                <div className="aspect-[3/4] w-full overflow-hidden rounded-xl bg-secondary/70 ring-1 ring-foreground/8">
-                  <div className="flex h-full w-full items-center justify-center">
-                    <div className="text-center">
-                      <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-background/60">
-                        <Palette className="size-5 text-muted-foreground/60" />
-                      </div>
-                      <p className="text-xs text-muted-foreground/50">
-                        Artwork photo
-                      </p>
-                    </div>
-                  </div>
-                </div>
+            {featured.slice(0, 6).map((work) => (
+              <Link key={work.id} href={`/gallery/${work.slug}`} className="group">
+                <Card className="cursor-pointer border-0 bg-transparent ring-0 transition-transform duration-200 group-hover:-translate-y-1">
+                  {/* Framed painting */}
+                  <FramedPainting
+                    src={work.imageUrl}
+                    alt={work.title}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
 
-                {/* Info */}
-                <CardContent className="px-1 pt-4 pb-0">
-                  <h3 className="font-serif text-lg font-medium leading-snug text-foreground">
-                    {work.title}
-                  </h3>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Watercolor on archival paper &mdash; {work.dimensions}
-                  </p>
-                  <p className="mt-3 text-base font-semibold text-foreground">
-                    {work.price}
-                  </p>
-                </CardContent>
-              </Card>
+                  {/* Info */}
+                  <CardContent className="px-1 pt-3 pb-0">
+                    <h3 className="font-serif text-lg font-medium leading-snug text-foreground group-hover:text-primary transition-colors">
+                      {work.title}
+                    </h3>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Watercolor on archival paper &mdash; {work.width}&quot;
+                      &times; {work.height}&quot;
+                    </p>
+                    <p className="mt-3 text-base font-semibold text-foreground">
+                      ${work.originalPrice.toLocaleString()}.00
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
 
@@ -176,22 +143,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Artist Preview ───────────────────────────────────────── */}
+      {/* Artist Preview */}
       <section className="border-y border-border bg-secondary/30 py-20 lg:py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <div className="grid items-center gap-10 lg:grid-cols-2">
-            {/* Photo placeholder */}
-            <div className="order-2 aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl bg-secondary/80 ring-1 ring-foreground/8 lg:order-1">
-              <div className="flex h-full w-full items-center justify-center">
-                <div className="text-center">
-                  <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-background/70">
-                    <Palette className="size-6 text-muted-foreground" />
-                  </div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    Artist photo
-                  </p>
-                </div>
-              </div>
+            {/* Artist photo */}
+            <div className="order-2 relative aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl ring-1 ring-foreground/8 lg:order-1">
+              <Image
+                src="/verlana-portrait.jpg"
+                alt="Verlana Laraway — watercolor artist from Whitefish, Montana"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
             </div>
 
             {/* Copy */}
@@ -221,7 +185,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Why Buy Original Art ─────────────────────────────────── */}
+      {/* Why Buy Original Art */}
       <section className="bg-background py-20 lg:py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <div className="mb-12 text-center">
